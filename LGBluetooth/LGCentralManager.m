@@ -117,10 +117,12 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self
                                              selector:@selector(stopScanForPeripherals)
                                                object:nil];
-    if (self.scanBlock) {
-        self.scanBlock(self.peripherals);
-    }
+    LGCentralManagerDiscoverPeripheralsCallback scanBlock = [self.scanBlock copy];
     self.scanBlock = nil;
+    if (scanBlock) {
+        scanBlock(self.peripherals);
+        scanBlock = nil;
+    }
 }
 
 - (void)scanForPeripheralsWithServices:(NSArray *)serviceUUIDs
