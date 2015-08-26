@@ -161,13 +161,15 @@ NSString * const kConnectionMissingErrorMessage = @"BLE Device is not connected"
                                              selector:@selector(connectionWatchDogFired)
                                                object:nil];
     LGLog(@"Connection with error - %@", anError);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kLGPeripheralDidConnect
+                                                        object:self
+                                                      userInfo:@{@"error" : anError ? : [NSNull null]}];
+    
     if (self.connectionBlock) {
         self.connectionBlock(anError);
     }
     self.connectionBlock = nil;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kLGPeripheralDidConnect
-                                                        object:self
-                                                      userInfo:@{@"error" : anError ? : [NSNull null]}];
 }
 
 - (void)handleDisconnectWithError:(NSError *)anError
